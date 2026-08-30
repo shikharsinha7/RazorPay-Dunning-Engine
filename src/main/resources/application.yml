@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: dunning-engine
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dunning}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: ${PORT:8080}
+
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  model: gemini-3.6-flash
+
+resend:
+  api-key: ${RESEND_API_KEY:}
+  from-address: ${RESEND_FROM_ADDRESS:Dunning Engine <onboarding@resend.dev>}
+
+logging:
+  level:
+    com.buildathon.dunning: INFO
