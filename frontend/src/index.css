@@ -1,1 +1,44 @@
 @import "tailwindcss";
+
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+@theme {
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-ink: #0b1220;
+  --color-surface: #121a2b;
+  --color-surface-raised: #17223a;
+  --color-border-subtle: #1f2b45;
+
+  --color-ai: #4f8cff;
+  --color-ai-dim: #2c4a80;
+  --color-naive: #d98c4a;
+  --color-naive-dim: #7a5730;
+
+  --color-recovered: #2dd9c4;
+  --color-lost: #e2685c;
+  --color-pending: #64748b;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: #e6ebf5;
+  font-family: var(--font-body);
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
