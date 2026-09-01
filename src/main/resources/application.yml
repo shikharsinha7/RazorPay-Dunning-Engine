@@ -24,6 +24,10 @@ resend:
   api-key: ${RESEND_API_KEY:}
   from-address: ${RESEND_FROM_ADDRESS:Dunning Engine <onboarding@resend.dev>}
 
+app:
+  cors:
+    allowed-origin: ${FRONTEND_URL:http://localhost:5173}
+
 logging:
   level:
     com.buildathon.dunning: INFO

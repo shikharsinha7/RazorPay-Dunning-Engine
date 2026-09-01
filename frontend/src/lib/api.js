@@ -1,11 +1,19 @@
-// Thin fetch wrapper for the dashboard API. Uses relative paths ('/api/...')
-// so the Vite dev-server proxy (see vite.config.js) forwards to the Spring
-// Boot backend on localhost:8080 — no CORS setup needed for local dev.
+// Thin fetch wrapper for the dashboard API.
+//
+// Local dev: VITE_API_BASE_URL is unset, so paths stay relative ('/api/...')
+// and the Vite dev-server proxy (see vite.config.js) forwards to Spring Boot
+// on localhost:8080 — no CORS setup needed.
+//
+// Production (Vercel): VITE_API_BASE_URL is set to the deployed Render URL
+// at build time, so requests go directly cross-origin to the real backend
+// (CORS handled there — see WebConfig.java).
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '';
 
 async function getJson(path) {
-  const response = await fetch(path);
+  const url = `${API_BASE}${path}`;
+  const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`${path} failed: ${response.status} ${response.statusText}`);
+    throw new Error(`${url} failed: ${response.status} ${response.statusText}`);
   }
   return response.json();
 }
