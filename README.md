@@ -3,6 +3,7 @@
 **Built for the Razorpay Buildathon.**
 
 🔗 **Live:** [razorpay-dunning-engine.vercel.app](https://razorpay-dunning-engine.vercel.app) · Backend: deployed on Render
+   ![Dashboard](./docs/dashboard.png)
 
 When a recurring payment fails, most systems retry it blindly on a fixed schedule — same 3 attempts, same intervals, regardless of *why* it failed. This engine classifies the failure reason with an LLM (Gemini) and drives retry timing, channel, and messaging around it — then proves the difference against a naive baseline, side by side, on the same live dataset.
 
