@@ -7,15 +7,15 @@
 - `frontend/src/lib/api.js` — reads `VITE_API_BASE_URL` at build time in production, falls back to relative paths locally (your dev workflow is unchanged)
 - Root `README.md`
 
-## Important: I could not verify the Docker build myself
-My sandbox can't reach Docker Hub (same category of limitation as Maven Central on Day 1). Verify it locally **before** pushing to Render — you have Docker Desktop installed, so this is fully testable on your end:
+## Verifying the Docker build locally, before deploying
+Java has to deploy as Docker on Render, and Docker builds can fail on things a local `mvn` build wouldn't catch — worth confirming locally first rather than debugging blind on Render's build logs:
 
 ```powershell
 cd C:\Users\SAMSUNG\Downloads\razorpay-dunning-engine
 docker build -t dunning-engine-test .
 ```
 
-If `eclipse-temurin:25-jdk` or `:25-jre` don't exist as tags (unlikely — Temurin usually ships images within weeks of a JDK GA, and JDK 25 has been out since Sept 2025 — but I can't confirm from here), check [hub.docker.com/_/eclipse-temurin/tags](https://hub.docker.com/_/eclipse-temurin/tags) and tell me the closest available tag; I'll adjust the Dockerfile.
+If `eclipse-temurin:25-jdk` or `:25-jre` ever aren't available as tags, check [hub.docker.com/_/eclipse-temurin/tags](https://hub.docker.com/_/eclipse-temurin/tags) for the closest available one and update the `Dockerfile`.
 
 If the build succeeds, run it:
 ```powershell

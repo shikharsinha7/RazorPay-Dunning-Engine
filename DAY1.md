@@ -33,8 +33,5 @@
 
 5. **Verify in Supabase** — open Table Editor, check `customers`, `payments`, and `failure_events` are populated.
 
-## If something breaks
-I couldn't compile or run this myself — my sandbox can't reach Maven Central. If `mvn spring-boot:run` throws an error on first try, paste it back to me and I'll fix it directly.
-
 ## Next: Day 2
 Ingest endpoint (`POST /api/failures`) + naive fixed-interval retry scheduler (24h → 72h → 7d, 3 attempts).
