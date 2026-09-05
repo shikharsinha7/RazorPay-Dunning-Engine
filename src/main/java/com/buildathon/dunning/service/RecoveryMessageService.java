@@ -58,6 +58,8 @@ public class RecoveryMessageService {
             try {
                 resendEmailService.send(customer.getEmail(), content.subject(), content.body());
                 provider = "resend";
+                log.info("Sent real email via Resend to {} for attempt {} (payment {})",
+                        customer.getEmail(), attempt.getId(), payment.getId());
             } catch (Exception e) {
                 log.warn("Resend send failed ({}) — recording message as simulated for attempt {}",
                         e.getMessage(), attempt.getId());
