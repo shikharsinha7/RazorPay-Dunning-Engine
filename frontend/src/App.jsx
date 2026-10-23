@@ -9,11 +9,20 @@ import EventFeed from './components/EventFeed';
 import ErrorBoundary from './components/ErrorBoundary';
 
 const REFRESH_INTERVAL_MS = 15_000;
+// The deployed backend runs on a free tier that sleeps when idle; its first response can take about a minute.
+const SLOW_LOAD_HINT_MS = 5_000;
+const IS_LOCAL = !import.meta.env.VITE_API_BASE_URL;
 
 export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [slowLoad, setSlowLoad] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setSlowLoad(true), SLOW_LOAD_HINT_MS);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -52,7 +61,7 @@ export default function App() {
             <h1 className="font-[var(--font-display)] text-xl font-semibold text-slate-100 md:text-2xl">
               Smart Dunning &amp; Recovery Engine
             </h1>
-            <p className="text-xs text-slate-500">Razorpay Buildathon</p>
+            <p className="text-xs text-slate-500">Razorpay Buildathon · simulated payment failures</p>
           </div>
           <div className="flex items-center gap-2 text-xs text-slate-500">
             {!error && data && (
@@ -69,13 +78,21 @@ export default function App() {
           <div className="rounded-lg border border-[var(--color-lost)]/40 bg-red-950/30 p-4 text-sm text-red-300">
             Failed to load dashboard data: {error}
             <br />
-            Is the backend running on http://localhost:8080?
+            {IS_LOCAL
+              ? 'Is the backend running on http://localhost:8080?'
+              : 'The server may still be waking up. This page retries every 15 seconds.'}
           </div>
         )}
 
         {!error && !data && (
           <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 text-sm text-slate-400">
             Loading dashboard data…
+            {slowLoad && !IS_LOCAL && (
+              <>
+                <br />
+                Waking the server up. The free backend sleeps when idle, so the first load can take up to a minute.
+              </>
+            )}
           </div>
         )}
 
