@@ -43,7 +43,7 @@ Only the AI track is authoritative for a payment's real outcome (it's what would
 
 ## Running it locally
 
-See `DAY1.md` through `DAY7.md` for the full day-by-day build log, including exact setup steps for each piece (Supabase, Gemini, Resend). Quick version:
+See the build log in [`docs/build-log/`](./docs/build-log/) for the full day-by-day setup steps (Supabase, Gemini, Resend). Quick version:
 
 **Backend:**
 ```powershell
@@ -76,10 +76,10 @@ npm run dev
 
 ## Build log
 
-- [`DAY1.md`](./DAY1.md) — data model + seed data
-- [`DAY2.md`](./DAY2.md) — ingest endpoint + naive retry track
-- [`DAY3.md`](./DAY3.md) — Gemini classification + AI retry track
-- [`DAY4.md`](./DAY4.md) — message generation + Resend email
-- [`DAY5.md`](./DAY5.md) — dashboard APIs + frontend scaffold
-- [`DAY6.md`](./DAY6.md) — dashboard visual design
-- [`DAY7.md`](./DAY7.md) — deployment (Render + Vercel)
+- [`DAY1.md`](./docs/build-log/DAY1.md) — data model + seed data
+- [`DAY2.md`](./docs/build-log/DAY2.md) — ingest endpoint + naive retry track
+- [`DAY3.md`](./docs/build-log/DAY3.md) — Gemini classification + AI retry track
+- [`DAY4.md`](./docs/build-log/DAY4.md) — message generation + Resend email
+- [`DAY5.md`](./docs/build-log/DAY5.md) — dashboard APIs + frontend scaffold
+- [`DAY6.md`](./docs/build-log/DAY6.md) — dashboard visual design
+- [`DAY7.md`](./docs/build-log/DAY7.md) — deployment (Render + Vercel)
