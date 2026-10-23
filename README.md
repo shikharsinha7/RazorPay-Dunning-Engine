@@ -5,7 +5,7 @@
 🔗 **Live:** [razorpay-dunning-engine.vercel.app](https://razorpay-dunning-engine.vercel.app) · Backend: deployed on Render
    ![Dashboard](./docs/dashboard.png)
 
-When a recurring payment fails, most systems retry it blindly on a fixed schedule — same 3 attempts, same intervals, regardless of *why* it failed. This engine classifies the failure reason with an LLM (Gemini) and drives retry timing, channel, and messaging around it — then proves the difference against a naive baseline, side by side, on the same live dataset.
+When a recurring payment fails, most systems retry it blindly on a fixed schedule — same 3 attempts, same intervals, regardless of *why* it failed. This engine classifies the failure reason with an LLM (Gemini) and drives retry timing, channel, and messaging around it, then runs a naive fixed-schedule baseline next to it on the same simulated failures. The failures and the retry outcomes are simulated; see [How the simulation works](#how-the-simulation-works) for what that means for the comparison.
 
 ## The core idea
 
@@ -14,7 +14,7 @@ Every simulated failed payment runs through **two parallel retry tracks** at onc
 - **NAIVE** — a blind, fixed calendar: retry at 24h, then 96h, then 264h, always by email. This is what most systems actually do.
 - **AI** — Gemini classifies the failure (insufficient funds vs. expired card vs. bank decline vs. gateway timeout), recommends a retry window, a channel, and whether to prompt for an alternate payment method. Retries run on exponential backoff + jitter around that window, with channel diversity instead of email-only.
 
-Only the AI track is authoritative for a payment's real outcome (it's what would actually run in production) and only the AI track sends real email (via Resend). NAIVE runs as a genuine shadow simulation purely to produce the comparison numbers on the dashboard — the recovery-rate gap between the two tracks is the project's core proof point.
+Only the AI track is authoritative for a payment's real outcome (it's what would actually run in production) and only the AI track sends real email (via Resend). NAIVE runs as a shadow simulation purely to produce the comparison numbers on the dashboard.
 
 ## Architecture
 
@@ -36,6 +36,24 @@ Only the AI track is authoritative for a payment's real outcome (it's what would
 - **Email**: Resend, real delivery for AI-track EMAIL attempts
 - **Frontend**: React + Vite + Tailwind v4 + Recharts
 - **Deploy**: Backend on Render (Docker), frontend on Vercel
+
+## How the simulation works
+
+There is no real payment gateway behind this project, so two things are simulated:
+
+- **The failures.** `SeedDataRunner` creates about 150 failed payments on startup, and `POST /api/failures` stands in for a gateway's failure webhook.
+- **Whether a retry recovers the payment.** `RecoveryOutcomeSimulator` draws a random number against a base recovery probability per failure code (insufficient funds 30%, bank decline 25%, expired card 10%, gateway timeout 45%). For the AI track that probability is multiplied by 1.6, capped at 90%.
+
+So the gap in recovery rate between the two tracks on the dashboard comes from that 1.6 multiplier, an assumption written into the code. It is not a measured result, and the dashboard shows the mechanism, not proof that the AI track recovers more money.
+
+What is real:
+
+- The Gemini call that classifies each failure and recommends a retry window, a channel, and whether to ask for a new payment method.
+- The rule-based fallback for every failure code when that call fails.
+- Scheduling with exponential backoff and jitter, and running the attempts.
+- Real email through Resend for AI-track email attempts.
+
+Turning the comparison into a measured claim would take a labelled set of failure messages to check the classifier's accuracy against a plain code lookup, and real recovery data instead of the simulator.
 
 ## Data model
 
@@ -71,7 +89,7 @@ npm run dev
 | `GET /api/payments/{id}/messages` | Recovery messages generated/sent for a payment |
 | `POST /api/admin/retries/force-run` | Demo helper — executes every pending attempt immediately, ignoring schedule |
 | `GET /api/dashboard/funnel` | Payment outcome counts |
-| `GET /api/dashboard/comparison` | AI vs. NAIVE recovery rate — the headline stat |
+| `GET /api/dashboard/comparison` | AI vs. NAIVE recovery rate (simulated, see above) |
 | `GET /api/dashboard/timeline` | Every executed attempt, for charting |
 
 ## Build log
